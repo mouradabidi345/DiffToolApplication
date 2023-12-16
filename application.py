@@ -15,9 +15,9 @@ from flask import Flask, request, render_template,request
 import pythoncom
 from urllib import parse
 
-connecting_stringA = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:bidev.database.windows.net,1433;Database=InfoTrax_Prod;Uid=bidevreader;Pwd=BJbhPxv3nMZhW8u3;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
-connecting_stringB = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:dlo6zra872.database.windows.net,1433;Database=Asea_Prod;Uid=aseauser;Pwd=@S34Pr0d;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
-connecting_stringC = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:bidev.database.windows.net,1433;Database=ASEA_REPORTS;Uid=BI_primary;Pwd=@234_MgaKaKa!;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+connecting_stringA = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:bidev.database.windows.net,1433;Database=InfoTrax_Prod;Uid=xxxxxx;Pwd=xxxxxx;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+connecting_stringB = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:dlo6zra872.database.windows.net,1433;Database=Asea_Prod;Uid=xxxxxx;Pwd=xxxxxx;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+connecting_stringC = 'Driver={ODBC Driver 17 for SQL Server};Server=tcp:bidev.database.windows.net,1433;Database=ASEA_REPORTS;Uid=xxxxxx;Pwd=xxxxxx;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
 
 paramsA = parse.quote_plus(connecting_stringA)
 paramsB = parse.quote_plus(connecting_stringB)
@@ -52,8 +52,8 @@ def  SnowflakeVSSQLSERVER_VICEVERSA(WAREHOUSE1,Columns1 , DATABASE1, SCHEMA1, Ta
     
     if((not WAREHOUSE1 =="") and (WAREHOUSE2 =="")):
         ctx1 = snowflake.connector.connect(
-          user='SF_RAW_STAGE_SERVICE',
-          password='Zg5XZ!mm%PvA',
+          user='xxxxxx',
+          password='xxxxxxx',
           account='ba62849.east-us-2.azure',
           warehouse1= WAREHOUSE1,
           database1=DATABASE1,
@@ -169,8 +169,8 @@ def  SnowflakeVSSQLSERVER_VICEVERSA(WAREHOUSE1,Columns1 , DATABASE1, SCHEMA1, Ta
     if((WAREHOUSE1 =="") and (not WAREHOUSE2 =="")):
 
         ctx2 = snowflake.connector.connect(
-          user='SF_RAW_STAGE_SERVICE',
-          password='Zg5XZ!mm%PvA',
+          user='xxxxxx',
+          password='xxxxxxx',
           account='ba62849.east-us-2.azure',
           warehouse2= WAREHOUSE2,
           database2=DATABASE2,
@@ -767,66 +767,7 @@ def Mainfunction(WAREHOUSE1,Columns1, DATABASE1,SCHEMA1,Table1, filter1,WAREHOUS
         result = SnowflakeQA(WAREHOUSE1,Columns1 , DATABASE1, SCHEMA1, Table1,filter1,WAREHOUSE2,Columns2, DATABASE2, SCHEMA2,  Table2, filter2,Primary_key1, Primary_key2, Email_Address) #new
 
 
-##SqlServer VS Sql server  Working with one Primary key
-# job =  Mainfunction("","""ID,ACCOUNTYPE
-# ,LEGACYNUMBER""", 'InfoTrax_Prod','dbo','Tbl_DISTRIBUTOR', """WHERE CreatedDate BETWEEN '2015-01-10' AND DATEADD(month,-1, GETDATE()) AND UpdatedDate <= DATEADD(month, -1, GETDATE())""" ,"","""ID,ACCOUNTYPE
-# ,LEGACYNUMBER""",'ASEA_PROD', 'dbo', 'Tbl_DISTRIBUTOR', """WHERE CreatedDate BETWEEN '2015-01-10' AND DATEADD(month,-1, GETDATE()) AND UpdatedDate <= DATEADD(month, -1, GETDATE())""", 'ID', '')        #qlServer VS Sql server  Working with one Primary key 
-
-
-
-# #SqlServer VS Sql server  Working with2 primary keys
-# job =  Mainfunction("","""ACCOUNTTYPE
-# ,LEGACYNUMBER""", 'InfoTrax_Prod','dbo','Tbl_DISTRIBUTOR', """WHERE CreatedDate BETWEEN '2015-01-10' AND DATEADD(month,-1, GETDATE()) AND UpdatedDate <= DATEADD(month, -1, GETDATE())""" ,"","""ACCOUNTTYPE
-# ,LEGACYNUMBER""",'ASEA_PROD', 'dbo', 'Tbl_DISTRIBUTOR', """WHERE CreatedDate BETWEEN '2015-01-10' AND DATEADD(month,-1, GETDATE()) AND UpdatedDate <= DATEADD(month, -1, GETDATE())""", 'FIRSTNAME', '') #qlServer VS Sql server  Working with2 primary keys
-
-
-
-## Snowflake VS Snowflae working with one Primary key    
-# job =  Mainfunction('COMPUTE_MACHINE',"""DISTRIBUTORID
-# ,STARTDATE
-# ,ENDDATE
-# ,ACCOUNTTYPE""", 'DB_RAW_DATA','INFOTRAX_PROD','LU_ACCOUNTTYPE_LOG', """""" ,'COMPUTE_MACHINE',"""DISTRIBUTORID
-# ,STARTDATE
-# ,ENDDATE
-# ,ACCOUNTTYPE""",'DB_ASEA_REPORTS', 'DBO', 'LU_ACCOUNTTYPE_LOG', """""", 'DISTRIBUTORID' ,"")  # Snowflake VS Snowflae working one Primary key       
-
-
-
-## Snowflake VS Snowflae working with 2 porimary keys #working   
-# job=  Mainfunction('COMPUTE_MACHINE',"""DISTRIBUTORID
-# ,STARTDATE
-# ,ENDDATE
-# ,ACCOUNTTYPE""", 'DB_RAW_DATA','INFOTRAX_PROD','LU_ACCOUNTTYPE_LOG', """""" ,'COMPUTE_MACHINE',"""DISTRIBUTORID
-# ,STARTDATE
-# ,ENDDATE
-# ,ACCOUNTTYPE""",'DB_ASEA_REPORTS', 'DBO', 'LU_ACCOUNTTYPE_LOG', """""", 'DISTRIBUTORID', 'ACCOUNTTYPE')  # Snowflake VS Snowflae working with 2 porimary keys #working   
-
-
-
-
-
-
-#sqlserver VS snowflake working on both directions
-# job =  Mainfunction('COMPUTE_MACHINE',"""DISTRIBUTORID
-# ,RANK_CHANGE
-# , CAST(STARTDATE AS DATE) AS STARTDATE
-# , CAST(ENDDATE AS DATE) AS ENDDATE
-# , ACCOUNTTYPE
-# , POST_LOG_UPDATE""", 'DB_ASEA_REPORTS','PUBLIC','LU_ACCOUNTTYPE_LOG_QA', """where STARTDATE > '2015-01-01'""" ,'',"""DISTRIBUTORID
-#     ,RANK_CHANGE
-#     , CAST(STARTDATE AS DATE) AS STARTDATE
-#     , CAST(ENDDATE AS DATE) AS ENDDATE
-#     , ACCOUNTTYPE
-#     , POST_LOG_UPDATE""",'InfoTrax_Prod', 'dbo', 'LU_ACCOUNTTYPE_LOG_QA', """where STARTDATE > '2015-01-01'""",'DISTRIBUTORID', 'RANK_CHANGE')  #sqlserver VS snowflake working directions
-
-
-
-
-
-
-
-# ##databricks SqlServer VS Sql server  Working with one Primary key
-# job =  Mainfunction("","""*""", 'InfoTrax_Prod','dbo','TBL_MARKETS', """""" ,"","""*""",'ASEA_REPORTS', 'asea_sales_stage', 'TBL_MARKETS', """""", 'ID', '')        #qlServer VS Sql server  Working with one Primary key 
+ 
 
 @application.route('/')
 def form():
